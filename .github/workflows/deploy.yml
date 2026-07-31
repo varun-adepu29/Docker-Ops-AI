@@ -70,7 +70,7 @@ jobs:
           trap cleanup EXIT
 
           for i in {1..10}; do
-            if curl -fsS http://localhost:5000/health; then
+            if curl -fsS http://localhost:5777/health; then
               echo "Container health check passed"
               exit 0
             fi
