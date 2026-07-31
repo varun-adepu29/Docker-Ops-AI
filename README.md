@@ -80,7 +80,16 @@ Set these under **Settings → Secrets and variables → Actions**:
 - `EC2_SSH_KEY`
 - `GEMINI_API_KEY`
 - `AI_AGENT_API_KEY` (optional but recommended; if omitted, the agent uses `GEMINI_API_KEY`)
+- `AI_AGENT_GITHUB_TOKEN` (PAT/fine-grained token with repo + workflow permission for AI PRs that change workflow files)
 - `AI_AGENT_GITHUB_TOKEN` (classic PAT or fine-grained token that can create PR branches and update workflow files; required when AI remediation changes `.github/workflows/*.yml`)
+
+## Recommended GitHub Actions variables
+
+Set these under **Settings → Secrets and variables → Actions → Variables**:
+
+- `AI_AGENT_MODEL=gemini-2.0-flash`
+- `GEMINI_MODEL=gemini-2.0-flash`
+- `AI_AGENT_MAX_ATTEMPTS=3`
 
 ## Required GitHub Environments
 

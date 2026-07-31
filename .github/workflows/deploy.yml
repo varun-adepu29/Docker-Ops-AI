@@ -156,6 +156,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_MODEL: ${{ vars.GEMINI_MODEL || 'gemini-2.0-flash' }}
           IMAGE_NAME: ${{ env.IMAGE_NAME }}
           IMAGE_TAG: ${{ github.sha }}
           CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
@@ -163,7 +164,7 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
-          envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN,GEMINI_API_KEY,IMAGE_NAME,IMAGE_TAG,CONTAINER_NAME
+          envs: DOCKERHUB_USERNAME,DOCKERHUB_TOKEN,GEMINI_API_KEY,GEMINI_MODEL,IMAGE_NAME,IMAGE_TAG,CONTAINER_NAME
           script_stop: true
           script: |
             set -Eeuo pipefail
@@ -183,13 +184,14 @@ jobs:
             docker run -d \
               -p 5000:5000 \
               -e GEMINI_API_KEY="$GEMINI_API_KEY" \
+              -e GEMINI_MODEL="$GEMINI_MODEL" \
               --name "$CONTAINER_NAME" \
               --restart unless-stopped \
               "$IMAGE"
 
             echo "Verifying container health..."
             for i in {1..10}; do
-              if curl -fsS http://localhost:50/health; then
+              if curl -fsS http://localhost:5000/health; then
                 echo "Deployment health check passed"
                 docker inspect --format='Deployed image ID: {{.Image}}' "$CONTAINER_NAME"
                 exit 0
